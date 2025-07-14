@@ -2,11 +2,12 @@ import { Dropdown, Menu, Tooltip } from 'antd';
 import { FiZap } from 'react-icons/fi';
 import { FaUserCircle } from 'react-icons/fa';
 import { DownOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/features/auth/authSlice';
 
 const MainHeader = () => {
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.logInUser)
   const handleLogout = () => {
     dispatch(logout())
     window.location.reload();
@@ -39,7 +40,7 @@ const MainHeader = () => {
           <Tooltip title="Available credits for summarizing content">
             <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-md">
               <FiZap className="text-white" />
-              <span>4 Credits Left</span>
+              <span>{user?.user?.credits} Credits Left</span>
             </div>
           </Tooltip>
 
