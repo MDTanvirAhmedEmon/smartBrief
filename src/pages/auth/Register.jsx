@@ -1,19 +1,32 @@
 /* eslint-disable react/no-unknown-property */
-import { Form, Input } from "antd";
-
-import { Link } from "react-router-dom";
+import { Form, Input, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { useRegisterMutation } from "../../redux/features/auth/authApi";
 
 const Register = () => {
 
+    const navigate = useNavigate()
 
+    const [register, { isLoading }] = useRegisterMutation();
     const onFinish = (values) => {
-        console.log(values);
+
+
+        const registerData = {
+            fullName: values?.name,
+            email: values?.email,
+            password: values?.password,
+        };
+        register(registerData).unwrap()
+            .then(() => {
+                navigate(`/auth/login`);
+                message.success("Register Successfully!!!")
+            })
+            .catch((error) => {
+                message.error(error?.data?.message)
+                console.log(error);
+            })
+
     };
-    // const imageStyle = {
-    //   backgroundImage: `URL(${bgImage.src})`,
-    //   backgroundSize: "cover",
-    //   backgroundPosition: "center",
-    // };
 
     return (
         <div
@@ -32,72 +45,72 @@ const Register = () => {
                                 </p>
                             </div>
 
-                                <Form
-                                    name="basic"
-                                    layout="vertical"
-                                    initialValues={{ remember: true }}
-                                    onFinish={onFinish}
+                            <Form
+                                name="basic"
+                                layout="vertical"
+                                initialValues={{ remember: true }}
+                                onFinish={onFinish}
+                            >
+                                <Form.Item
+                                    label="Full Name"
+                                    name="name"
+                                    rules={[
+                                        { required: true, message: "Please input your name!" },
+                                    ]}
                                 >
-                                    <Form.Item
-                                        label="Full Name"
-                                        name="name"
-                                        rules={[
-                                            { required: true, message: "Please input your name!" },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Enter your name"
-                                            className="rounded-none py-2"
-                                        />
-                                    </Form.Item>
+                                    <Input
+                                        placeholder="Enter your name"
+                                        className="rounded-none py-2"
+                                    />
+                                </Form.Item>
 
-                                    <Form.Item
-                                        label="Email"
-                                        name="email"
-                                        rules={[
-                                            { required: true, message: "Please input your email!" },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Enter your email"
-                                            className="rounded-none py-2"
-                                        />
-                                    </Form.Item>
+                                <Form.Item
+                                    label="Email"
+                                    name="email"
+                                    rules={[
+                                        { required: true, message: "Please input your email!" },
+                                    ]}
+                                >
+                                    <Input
+                                        placeholder="Enter your email"
+                                        className="rounded-none py-2"
+                                    />
+                                </Form.Item>
 
-                                    <Form.Item
-                                        label="Password"
-                                        name="password"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: "Please input your password!",
-                                            },
-                                        ]}
-                                    >
-                                        <Input.Password
-                                            placeholder="Enter your password"
-                                            className="rounded-none py-2"
-                                        />
-                                    </Form.Item>
+                                <Form.Item
+                                    label="Password"
+                                    name="password"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please input your password!",
+                                        },
+                                    ]}
+                                >
+                                    <Input.Password
+                                        placeholder="Enter your password"
+                                        className="rounded-none py-2"
+                                    />
+                                </Form.Item>
 
-                                    <div className="flex justify-between items-center mt-4">
-                                        Already have an account?
-                                        <Link to={"/auth/login"} className="text-blue-500">
-                                            LogIn
-                                        </Link>
-                                    </div>
-
-                                    <Link to={`/`} >
-                                        <button
-                                            type="primary"
-                                            htmltype="submit"
-                                            // disabled={isLoading}
-                                            className="bg-blue-600 w-full mt-8 mb-14 text-white px-5 py-[6px] text-lg rounded-none"
-                                        >
-                                            Register
-                                        </button>
+                                <div className="flex justify-between items-center mt-4">
+                                    Already have an account?
+                                    <Link to={"/auth/login"} className="text-blue-500">
+                                        LogIn
                                     </Link>
-                                </Form>
+                                </div>
+
+                                {/* <Link to={`/`} > */}
+                                    <button
+                                        type="primary"
+                                        htmltype="submit"
+                                        disabled={isLoading}
+                                        className="bg-blue-600 w-full mt-8 mb-14 text-white px-5 py-[6px] text-lg rounded-none"
+                                    >
+                                        {isLoading ? "Loading.." : "Register"}
+                                    </button>
+                                {/* </Link> */}
+                            </Form>
                         </div>
                         <div className="p-8 bg-[#c9dffd] text-center flex flex-col justify-center">
                             <h1 className="text-3xl font-semibold mb-4">Welcome to SmartBrief!</h1>

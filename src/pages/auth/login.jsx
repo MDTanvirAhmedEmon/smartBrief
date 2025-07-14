@@ -1,20 +1,40 @@
 /* eslint-disable react/no-unknown-property */
-import { Form, Input } from "antd";
-
-import { Link } from "react-router-dom";
+import { Form, Input, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { useLogInMutation } from "../../redux/features/auth/authApi";
+import { decodedToken } from "../../utils/jwtDecoder";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/features/auth/authSlice";
 
 const LogIn = () => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
-
+    const [register, { isLoading }] = useLogInMutation();
     const onFinish = (values) => {
-        console.log(values);
-    };
-    // const imageStyle = {
-    //   backgroundImage: `URL(${bgImage.src})`,
-    //   backgroundSize: "cover",
-    //   backgroundPosition: "center",
-    // };
 
+
+        const data = {
+            email: values?.email,
+            password: values?.password,
+        };
+        register(data).unwrap()
+            .then((data) => {
+                console.log(data);
+                const userInfo = decodedToken(data?.data?.accessToken)
+                console.log(userInfo);
+ 
+                const token = data?.data?.accessToken
+                dispatch(setUser({ user: userInfo, token: token }))
+                navigate(`/`)
+                message.success("LogIn Successfully!!!")
+            })
+            .catch((error) => {
+                message.error(error?.data?.message)
+                console.log(error);
+            })
+
+    };
     return (
         <div
             className="  h-auto md:h-screen"
@@ -31,59 +51,59 @@ const LogIn = () => {
                                     Please enter your email and password to continue
                                 </p>
                             </div>
-                                <Form
-                                    name="basic"
-                                    layout="vertical"
-                                    initialValues={{ remember: true }}
-                                    onFinish={onFinish}
+                            <Form
+                                name="basic"
+                                layout="vertical"
+                                initialValues={{ remember: true }}
+                                onFinish={onFinish}
+                            >
+                                <Form.Item
+                                    label="Email"
+                                    name="email"
+                                    rules={[
+                                        { required: true, message: "Please input your email!" },
+                                    ]}
                                 >
-                                    <Form.Item
-                                        label="Email"
-                                        name="email"
-                                        rules={[
-                                            { required: true, message: "Please input your email!" },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Enter your email"
-                                            className="rounded-none py-2"
-                                        />
-                                    </Form.Item>
+                                    <Input
+                                        placeholder="Enter your email"
+                                        className="rounded-none py-2"
+                                    />
+                                </Form.Item>
 
-                                    <Form.Item
-                                        label="Password"
-                                        name="password"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: "Please input your password!",
-                                            },
-                                        ]}
-                                    >
-                                        <Input.Password
-                                            placeholder="Enter your password"
-                                            className="rounded-none py-2"
-                                        />
-                                    </Form.Item>
+                                <Form.Item
+                                    label="Password"
+                                    name="password"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please input your password!",
+                                        },
+                                    ]}
+                                >
+                                    <Input.Password
+                                        placeholder="Enter your password"
+                                        className="rounded-none py-2"
+                                    />
+                                </Form.Item>
 
-                                    <div className="flex justify-between items-center mt-4">
-                                        Do not have an account?
-                                        <Link to={"/auth/register"} className="text-blue-500">
-                                            Register
-                                        </Link>
-                                    </div>
-
-                                    <Link to={`/`} >
-                                        <button
-                                            type="primary"
-                                            htmltype="submit"
-                                            // disabled={isLoading}
-                                            className="bg-blue-600 w-full mt-8 mb-14 text-white px-5 py-[6px] text-lg rounded-none"
-                                        >
-                                            Log In
-                                        </button>
+                                <div className="flex justify-between items-center mt-4">
+                                    Do not have an account?
+                                    <Link to={"/auth/register"} className="text-blue-500">
+                                        Register
                                     </Link>
-                                </Form>
+                                </div>
+
+                                {/* <Link to={`/`} > */}
+                                    <button
+                                        type="primary"
+                                        htmltype="submit"
+                                        disabled={isLoading}
+                                        className="bg-blue-600 w-full mt-8 mb-14 text-white px-5 py-[6px] text-lg rounded-none"
+                                    >
+                                        {isLoading ? "Loading..." : "Log In"}
+                                    </button>
+                                {/* </Link> */}
+                            </Form>
                         </div>
 
                         <div className="p-8 bg-[#c9dffd] text-center flex flex-col justify-center">
