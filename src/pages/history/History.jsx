@@ -1,6 +1,6 @@
-import React from 'react';
 import { Card } from 'antd';
 import { FiFileText } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 const mockHistory = [
   {
@@ -25,19 +25,20 @@ const mockHistory = [
 
 const History = () => {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="bg-gray-50 py-8">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">Summary History</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {mockHistory.map(item => (
-          <Card
-            key={item.id}
-            className="rounded-xl shadow hover:shadow-lg transition duration-300 cursor-pointer"
-            title={<div className="flex items-center space-x-2"><FiFileText className="text-blue-600" /><span>{item.title}</span></div>}
-            extra={<span className="text-sm text-gray-500">{item.date}</span>}
-          >
-            <p className="text-gray-700">{item.excerpt}</p>
-          </Card>
+          <Link key={item.id} to={"/single-summary"}>
+            <Card
+              className="rounded-xl shadow hover:shadow-lg transition duration-300 cursor-pointer"
+              title={<div className="flex items-center space-x-2"><FiFileText className="text-blue-600" /><span>{item.title}</span></div>}
+              extra={<span className="text-sm text-gray-500">{item.date}</span>}
+            >
+              <p className="text-gray-700">{item.excerpt}</p>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>

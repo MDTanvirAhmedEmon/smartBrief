@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { RiAdminLine, RiUserLine, RiEditLine, RiEyeLine, RiDashboardLine, RiUpload2Line } from "react-icons/ri";
-import { Button, Upload, Select } from "antd";
+import { useState } from "react";
+import { RiUpload2Line } from "react-icons/ri";
+import { Button, Upload, } from "antd";
 import TextArea from "antd/es/input/TextArea";
-
-const { Option } = Select;
+import { FiZap } from "react-icons/fi";
+import { HiOutlineChartBar, HiOutlineDocumentText } from "react-icons/hi";
 
 export default function Home() {
   const [summaryInput, setSummaryInput] = useState("");
@@ -15,13 +15,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="">
 
       {/* Main Content */}
-      <div className="flex-1 py-8 container mx-auto">
-        <header className="mb-8">
+      <div className=" py-8">
+        <div className="mb-8">
           <h2 className="text-3xl font-semibold">SmartBrief Summary Tool</h2>
-        </header>
+        </div>
 
         <div className="bg-white shadow-md rounded-lg p-6 flex flex-col lg:flex-row gap-6">
           {/* Input Section */}
@@ -36,7 +36,7 @@ export default function Home() {
 
             <div className="mb-4">
               <TextArea
-                rows={6}
+                rows={12}
                 placeholder="Or paste your content here..."
                 className="w-full"
                 value={summaryInput}
@@ -44,18 +44,30 @@ export default function Home() {
               />
             </div>
 
-            <Button type="primary" onClick={handleGenerate}>Generate Summary</Button>
+            <button className=" bg-blue-600 px-5 py-3 rounded-lg flex items-center gap-2 text-white cursor-pointer" type="submit" onClick={handleGenerate}> <FiZap className="h-6 w-6 text-white" /> Generate Summary</button>
           </div>
 
           {/* Output Section */}
+
           <div className="lg:w-1/2">
-            <h3 className="text-xl font-medium mb-4">Summary Result</h3>
-            <div className="bg-gradient-to-br from-blue-50 to-white border border-blue-200 rounded-xl p-6 shadow-sm min-h-[200px]">
-              <p className="text-gray-800 text-base leading-relaxed">
-                {summaryOutput || <span className="text-gray-400">Your summary will appear here...</span>}
-              </p>
+            <h3 className="text-xl font-semibold flex items-center gap-2 mb-1">
+              <HiOutlineChartBar className="text-gray-800 text-2xl" />
+              AI Summary
+            </h3>
+            <p className="text-gray-500 mb-6">Your summarized content will appear here</p>
+
+            <div className="flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-white border border-blue-200 rounded-xl p-10 shadow-sm min-h-[290px]">
+              {summaryOutput ? (
+                <p className="text-gray-800 text-base leading-relaxed">{summaryOutput}</p>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <HiOutlineDocumentText className="text-gray-400 text-5xl mb-4" />
+                  <p className="text-gray-400">Your AI-generated summary will appear here</p>
+                </div>
+              )}
             </div>
           </div>
+
         </div>
       </div>
     </div>
