@@ -4,6 +4,7 @@ import { Button, Upload, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { FiZap } from "react-icons/fi";
 import { HiOutlineChartBar, HiOutlineDocumentText } from "react-icons/hi";
+import mammoth from "mammoth";
 
 export default function Home() {
   const [summaryInput, setSummaryInput] = useState("");
@@ -28,6 +29,28 @@ export default function Home() {
     message.success("1 credit used. Your summary is ready!");
   };
 
+  const beforeUpload = async (file) => {
+    const isTxt = file.type === "text/plain";
+    const isDocx = file.name.endsWith(".docx");
+
+    if (isTxt) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target.result;
+        setSummaryInput(text);
+      };
+      reader.readAsText(file);
+    } else if (isDocx) {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      setSummaryInput(result.value);
+    } else {
+      message.error("Only .txt and .docx files are supported.");
+    }
+
+    return false;
+  }
+
   return (
     <div className="px-5">
       <div className="py-8 ">
@@ -43,10 +66,7 @@ export default function Home() {
             <div className="mb-4">
               <Upload
                 accept=".txt,.docx"
-                // eslint-disable-next-line no-unused-vars
-                beforeUpload={(file) => {
-                  return false;
-                }}
+                beforeUpload={beforeUpload}
               >
                 <Button icon={<RiUpload2Line />}>Upload .txt or .docx</Button>
               </Upload>
@@ -64,8 +84,8 @@ export default function Home() {
 
             <button
               className={`px-5 py-3 rounded-lg flex items-center gap-2 text-white transition ${creditsLeft > 0
-                  ? "bg-blue-600 hover:bg-blue-700"
-                  : "bg-gray-400 cursor-not-allowed"
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
                 }`}
               type="button"
               onClick={handleGenerate}
