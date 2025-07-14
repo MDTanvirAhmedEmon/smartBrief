@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unknown-property */
-import { ConfigProvider, Form, Input } from "antd";
+import { Form, Input } from "antd";
 
 import { Link } from "react-router-dom";
 
@@ -17,32 +17,21 @@ const Register = () => {
 
     return (
         <div
-            className="  h-auto md:h-screen"
+            className=" h-auto md:h-screen"
         >
-            <div className="bg-primary py-14 md:py-0 h-full">
+            <div className="bg-gradient-to-r from-blue-600 to-blue-50 py-8 md:py-0 h-full">
                 <div className="relative z-10 flex items-center justify-center h-full px-3  text-white">
                     <div className="bg-[#ffffff] text-black overflow-hidden shadow-lg max-w-5xl  w-full grid grid-cols-1 md:grid-cols-2">
-                        <div className="p-8 md:pt-24 pt-6 ">
+                        <div className="p-8 md:pt-14 pt-6 ">
                             <div className="text-center">
-                                <h1 className="text-3xl font-semibold mt-6 mb-4">
+                                <h1 className="text-3xl font-semibold">
                                     Register to Account
                                 </h1>
                                 <p className="mb-8 text-gray-600">
                                     Please enter your email and password to continue
                                 </p>
                             </div>
-                            <ConfigProvider
-                                theme={{
-                                    components: {
-                                        Input: {
-                                            activeBorderColor: "#6a9576",
-                                            hoverBorderColor: "#6a9576",
-                                            colorBorder: "#6a9576",
-                                            controlHeight: 40,
-                                        },
-                                    },
-                                }}
-                            >
+
                                 <Form
                                     name="basic"
                                     layout="vertical"
@@ -103,13 +92,12 @@ const Register = () => {
                                             type="primary"
                                             htmltype="submit"
                                             // disabled={isLoading}
-                                            className="bg-primary w-full mt-10 mb-20 text-white px-5 py-[6px] text-lg rounded-none"
+                                            className="bg-blue-600 w-full mt-8 mb-14 text-white px-5 py-[6px] text-lg rounded-none"
                                         >
                                             Register
                                         </button>
                                     </Link>
                                 </Form>
-                            </ConfigProvider>
                         </div>
                         <div className="p-8 bg-[#c9dffd] text-center flex flex-col justify-center">
                             <h1 className="text-3xl font-semibold mb-4">Welcome to SmartBrief!</h1>
