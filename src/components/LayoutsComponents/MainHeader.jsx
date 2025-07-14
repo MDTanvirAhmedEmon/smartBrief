@@ -2,11 +2,14 @@ import { Dropdown, Menu, Tooltip } from 'antd';
 import { FiZap } from 'react-icons/fi';
 import { FaUserCircle } from 'react-icons/fa';
 import { DownOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../redux/features/auth/authSlice';
 
 const MainHeader = () => {
+  const dispatch = useDispatch()
   const handleLogout = () => {
-    // Add logout logic here
-    console.log("User logged out");
+    dispatch(logout())
+    window.location.reload();
   };
 
   const menu = (

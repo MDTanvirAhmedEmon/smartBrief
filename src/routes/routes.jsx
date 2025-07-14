@@ -7,12 +7,13 @@ import History from '../pages/history/History';
 import SingleSummary from '../pages/SingleSummary/SingleSummary';
 import UserManagement from '../pages/userManagement/UserManagement';
 import AllSummaries from '../pages/allSummaries/AllSummaries';
+import PrivateRoute from './PrivateRoute';
 
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainLayout />,
+    element: <PrivateRoute><MainLayout /></PrivateRoute>,
     children: [
       {
         path: "/",
