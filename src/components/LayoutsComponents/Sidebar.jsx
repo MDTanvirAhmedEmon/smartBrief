@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { FiEdit, FiFileText, FiClock, FiUsers } from 'react-icons/fi'; // Feather icons
+import { FiEdit, FiFileText, FiClock, FiUsers } from 'react-icons/fi';
 
 const Sidebar = () => {
   const navItems = [
@@ -10,7 +10,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 h-screen bg-[#e9f0ff] py-6 px-4">
+    <aside className="w-[280px] h-screen bg-gradient-to-b from-[#e9f0ff] to-[#f9fbff] py-8 px-5 shadow-md">
       <nav className="flex flex-col space-y-2">
         {navItems.map(item => (
           <NavLink
@@ -18,19 +18,21 @@ const Sidebar = () => {
             to={item.to}
             end
             className={({ isActive }) =>
-              `flex items-center space-x-3 px-4 py-2 rounded-md font-medium transition ${
+              `group flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 border-l-4 ${
                 isActive
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-700 hover:bg-blue-100 hover:text-blue-600'
+                  ? 'bg-blue-600 text-white border-l-blue-600 shadow-inner'
+                  : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-l-transparent'
               }`
             }
           >
-            <span className="text-lg">{item.icon}</span>
-            <span>{item.label}</span>
+            <div className={`flex items-center justify-center text-lg`}>
+              {item.icon}
+            </div>
+            <span className="flex-1">{item.label}</span>
           </NavLink>
         ))}
       </nav>
-    </div>
+    </aside>
   );
 };
 
