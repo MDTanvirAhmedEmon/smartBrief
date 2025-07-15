@@ -105,7 +105,7 @@ const Register = () => {
                                             // disabled={isLoading}
                                             className="bg-primary w-full mt-10 mb-20 text-white px-5 py-[6px] text-lg rounded-none"
                                         >
-                                            Log In
+                                            Register
                                         </button>
                                     </Link>
                                 </Form>
