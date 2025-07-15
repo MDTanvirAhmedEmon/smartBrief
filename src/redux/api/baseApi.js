@@ -30,6 +30,6 @@ const baseQueryWithLogoutOnError = async (args, api, extraOptions) => {
 export const baseApi = createApi({
     reducerPath: 'baseApi',
     baseQuery: baseQueryWithLogoutOnError,
-    tagTypes: ['user', 'summary'],
+    tagTypes: ['summary'],
     endpoints: () => ({}),
 });
