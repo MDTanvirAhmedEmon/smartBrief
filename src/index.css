@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* sider  */
+.ant-layout-sider {
+    background: #ffffff !important;
+}
+
+
+/* menu */
+.custom-menu .ant-menu-item-selected .menu-icon {
+    filter: brightness(0) invert(1);
+}
+
+/* Submenu item height customization */
+.custom-menu .ant-menu-submenu .ant-menu-item {
+    height: 35px !important;
+    line-height: 35px !important;
+} 
+
+.ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title,
+.ant-menu-light > .ant-menu .ant-menu-submenu-selected > .ant-menu-submenu-title {
+    color: #1c4587 !important; 
+}
