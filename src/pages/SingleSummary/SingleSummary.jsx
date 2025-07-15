@@ -3,11 +3,13 @@ import { FiFileText, FiZap } from 'react-icons/fi';
 import { Input, message } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useGetSingleSummaryQuery, useUpdateSummaryMutation } from '../../redux/features/summary/summaryApi';
+import { useSelector } from 'react-redux';
 
 const { TextArea } = Input;
 
 const SingleSummary = () => {
     const { id } = useParams();
+    const user = useSelector((state) => state.logInUser)
     const { data, isLoading } = useGetSingleSummaryQuery(id);
 
     const [summaryContent, setSummaryContent] = useState('');
@@ -55,18 +57,22 @@ const SingleSummary = () => {
             <TextArea
                 rows={10}
                 value={summaryContent}
+                readOnly={user?.role !== 'reviewer'} 
                 onChange={(e) => setSummaryContent(e.target.value)}
                 className="mb-4"
             />
+            {
+                user?.user?.role !== "reviewer" &&
+                <button
+                    className="bg-blue-600 px-5 py-3 rounded-lg flex items-center gap-2 text-white cursor-pointer"
+                    onClick={update}
+                    disabled={updateLoading}
+                    type="button"
+                >
+                    <FiZap className="h-6 w-6 text-white" /> {updateLoading ? "Loading..." : "Edit Summary"}
+                </button>
+            }
 
-            <button
-                className="bg-blue-600 px-5 py-3 rounded-lg flex items-center gap-2 text-white cursor-pointer"
-                onClick={update}
-                disabled={updateLoading}
-                type="button"
-            >
-                <FiZap className="h-6 w-6 text-white" /> {updateLoading ? "Loading..." : "Edit Summary"}
-            </button>
         </div>
     );
 };

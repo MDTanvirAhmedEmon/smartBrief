@@ -44,14 +44,25 @@ const MainHeader = () => {
                   <FiZap className="text-white" />
                   <span>Admin Unlimited Credits</span>
                 </div>
-              </Tooltip>
-              :
-              <Tooltip title="Available credits for summarizing content">
+              </Tooltip> :
+              user?.user?.role === "editor" ?
                 <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-md">
                   <FiZap className="text-white" />
-                  <span>{user?.user?.credits} Credits Left</span>
+                  <span>Editor</span>
                 </div>
-              </Tooltip>
+                :
+                user?.user?.role === "reviewer" ?
+                  <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-md">
+                    <FiZap className="text-white" />
+                    <span>Reviewer</span>
+                  </div>
+                  :
+                  <Tooltip title="Available credits for summarizing content">
+                    <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-md">
+                      <FiZap className="text-white" />
+                      <span>{user?.user?.credits} Credits Left</span>
+                    </div>
+                  </Tooltip>
           }
 
 
@@ -64,7 +75,7 @@ const MainHeader = () => {
           </Dropdown>
         </div>
       </div>
-    </header>
+    </header >
   );
 };
 

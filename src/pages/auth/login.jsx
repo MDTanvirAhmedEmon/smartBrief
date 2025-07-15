@@ -22,7 +22,14 @@ const LogIn = () => {
                 const userInfo = decodedToken(data?.data?.accessToken)
                 const token = data?.data?.accessToken
                 dispatch(setUser({ user: userInfo, token: token }))
-                navigate(`/`)
+                if (userInfo.role === "editor") {
+                    navigate(`/all-summaries`)
+                }
+                else if (userInfo.role === "reviewer") {
+                    navigate(`/all-summaries`)
+                } else {
+                    navigate(`/`)
+                }
                 message.success("LogIn Successfully!!!")
             })
             .catch((error) => {
