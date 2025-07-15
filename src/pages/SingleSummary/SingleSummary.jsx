@@ -65,7 +65,7 @@ const SingleSummary = () => {
                 disabled={updateLoading}
                 type="button"
             >
-                <FiZap className="h-6 w-6 text-white" /> {updateLoading ? "Loading..." : "Edit Summarys"}
+                <FiZap className="h-6 w-6 text-white" /> {updateLoading ? "Loading..." : "Edit Summary"}
             </button>
         </div>
     );

@@ -1,11 +1,19 @@
-import { Card } from 'antd';
-import { FiFileText } from 'react-icons/fi';
+import { Card, message, Popconfirm } from 'antd';
+import { FiFileText, FiTrash2 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { useGetMySummaryQuery } from '../../redux/features/summary/summaryApi';
+import { useDeleteSummaryMutation, useGetMySummaryQuery } from '../../redux/features/summary/summaryApi';
 
 const History = () => {
   const { data, isLoading } = useGetMySummaryQuery();
-
+  const [deleteSummary] = useDeleteSummaryMutation();
+  const confirm = (id) => {
+    deleteSummary(id).then(() => {
+      message.success("deleted successfully")
+    })
+      .catch((error) => {
+        message.error(error?.data?.message)
+      })
+  };
   return (
     <div className="bg-gray-50 py-8">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">Summary History</h2>
@@ -38,21 +46,40 @@ const History = () => {
           :
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {data?.result.map(item => (
-              <Link key={item?._id} to={`/${item?._id}`}>
-                <Card
-                  className="rounded-xl shadow hover:shadow-lg transition duration-300 cursor-pointer"
-                  title={<div className="flex items-center space-x-2"><FiFileText className="text-blue-600" /><span>{item.title}</span></div>}
-                  extra={<span className="text-sm text-gray-500">{item?.createdAt ? new Date(item.createdAt).toISOString().split('T')[0] : ''}</span>}
-                >
-                  <p className="text-gray-700">{item?.summarizedContent?.slice(0, 100)}...</p>
-                </Card>
-              </Link>
+
+              <Card
+                key={item?._id}
+                className="rounded-xl shadow hover:shadow-lg transition duration-300"
+                title={<div className="flex items-center space-x-2"><FiFileText className="text-blue-600" /><span>{item.title?.slice(0, 50)}...</span></div>}
+                extra={
+                  <Popconfirm
+                    title="Delete the summary"
+                    description="Are you sure to delete this summary?"
+                    onConfirm={() => confirm(item?._id)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <FiTrash2 className=' cursor-pointer' size={18} />
+                  </Popconfirm>
+
+                }
+              // extra={<span className="text-sm text-gray-500">{item?.createdAt ? new Date(item.createdAt).toISOString().split('T')[0] : ''}</span>}
+              >
+                <Link to={`/${item?._id}`}>
+                  <p className="text-gray-700 cursor-pointer">{item?.summarizedContent?.slice(0, 100)}...</p>
+                </Link>
+                <div className="flex justify-end">
+
+                  <span className="text-sm text-gray-500">{item?.createdAt ? new Date(item.createdAt).toISOString().split('T')[0] : ''}</span>
+                </div>
+              </Card>
+
             ))}
           </div>
       }
 
 
-    </div>
+    </div >
   );
 };
 

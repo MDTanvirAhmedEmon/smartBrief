@@ -10,6 +10,7 @@ const summaryApi = baseApi.injectEndpoints({
                 method: 'POST',
                 body: data,
             }),
+            invalidatesTags: ['summary']
         }),
 
         getMySummary: builder.query({
@@ -17,6 +18,7 @@ const summaryApi = baseApi.injectEndpoints({
                 url: `/summary/my-summary`,
                 method: "GET",
             }),
+            providesTags: ['summary']
         }),
 
         getSingleSummary: builder.query({
@@ -32,6 +34,7 @@ const summaryApi = baseApi.injectEndpoints({
                 method: "GET",
                 params,
             }),
+            providesTags: ['summary']
         }),
 
         deleteSummary: builder.mutation({
@@ -39,6 +42,7 @@ const summaryApi = baseApi.injectEndpoints({
                 url: `/summary/${id}`,
                 method: 'DELETE',
             }),
+            invalidatesTags: ['summary']
         }),
 
         updateSummary: builder.mutation({
@@ -47,6 +51,7 @@ const summaryApi = baseApi.injectEndpoints({
                 method: 'PATCH',
                 body: data,
             }),
+            invalidatesTags: ['summary']
         })
 
     }),
