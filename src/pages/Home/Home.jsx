@@ -5,28 +5,42 @@ import TextArea from "antd/es/input/TextArea";
 import { FiZap } from "react-icons/fi";
 import { HiOutlineChartBar, HiOutlineDocumentText } from "react-icons/hi";
 import mammoth from "mammoth";
+import { useDispatch, useSelector } from "react-redux";
+import { useCreateSummaryMutation } from "../../redux/features/summary/summaryApi";
+import { setUser } from "../../redux/features/auth/authSlice";
 
 export default function Home() {
+
+  const user = useSelector((state) => state.logInUser)
+  const dispatch = useDispatch();
+
   const [summaryInput, setSummaryInput] = useState("");
   const [summaryOutput, setSummaryOutput] = useState("");
-  const [creditsLeft, setCreditsLeft] = useState(4);
+
+  const [createSummary, { isLoading }] = useCreateSummaryMutation();
 
   const handleGenerate = () => {
-    if (creditsLeft <= 0) {
-      message.warning("You have no credits left. Please upgrade your plan.");
+    if (!summaryInput) {
       return;
     }
+    createSummary({
+      originalContent: summaryInput,
+    }).unwrap()
+      .then((data) => {
+        setSummaryOutput(data?.result?.summarizedContent)
+        dispatch(setUser({
+          user: {
+            ...user.user,
+            credits: user.user.credits - 1
+          },
+          token: user.token
+        }));
 
-    // Mimic summary generation
-    const summary = summaryInput
-      ? summaryInput.slice(0, 100) + "..."
-      : "No input provided.";
-    setSummaryOutput(summary);
+      })
+      .catch((error) => {
+        message.error(error?.data?.message)
+      })
 
-    // Deduct 1 credit
-    setCreditsLeft((prev) => prev - 1);
-
-    message.success("1 credit used. Your summary is ready!");
   };
 
   const beforeUpload = async (file) => {
@@ -83,16 +97,16 @@ export default function Home() {
             </div>
 
             <button
-              className={`px-5 py-3 rounded-lg flex items-center gap-2 text-white transition ${creditsLeft > 0
+              className={`px-5 py-3 rounded-lg flex items-center gap-2 text-white transition ${user?.user?.credits > 0
                 ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-gray-400 cursor-not-allowed"
                 }`}
               type="button"
               onClick={handleGenerate}
-              disabled={creditsLeft <= 0}
+              disabled={user?.user?.credits <= 0 || isLoading}
             >
               <FiZap className="h-5 w-5 text-white" />
-              Generate Summary (1 Credit)
+              {isLoading ? "Loading.." : "Generate Summary (1 Credit)"}
             </button>
           </div>
 
