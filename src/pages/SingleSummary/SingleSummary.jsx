@@ -1,40 +1,53 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FiFileText, FiZap } from 'react-icons/fi';
 import { Input } from 'antd';
+import { useParams } from 'react-router-dom';
+import { useGetSingleSummaryQuery } from '../../redux/features/summary/summaryApi';
 
 const { TextArea } = Input;
 
 const SingleSummary = () => {
-    // Mock data: You’d fetch this by ID in a real app
-    const mockSummary = {
-        id: 1,
-        title: 'Article Summary - Climate Change',
-        date: '2025-07-12',
-        content: `Climate change continues to accelerate with rising sea levels, 
-        extreme weather events, and melting ice caps. Urgent action is required to 
-        mitigate its impacts and transition to renewable energy sources.`
-    };
+  const { id } = useParams();
+  const { data, isLoading } = useGetSingleSummaryQuery(id);
 
-    const [summary, setSummary] = useState(mockSummary);
-    return (
-        <div className="bg-gray-50 py-8 max-w-3xl">
-            <div className="flex items-center mb-2 space-x-2">
-                <FiFileText className="text-blue-600 text-2xl" />
-                <h2 className="text-2xl font-bold text-gray-800">{summary.title}</h2>
-            </div>
-            <p className="text-gray-500 mb-6">{summary.date}</p>
+  const [summaryContent, setSummaryContent] = useState('');
 
-            <TextArea
-                rows={10}
-                value={summary.content}
-                onChange={e => setSummary({ ...summary, content: e.target.value })}
-                className="mb-4"
-            />
+  useEffect(() => {
+    if (data?.result?.summarizedContent) {
+      setSummaryContent(data.result.summarizedContent);
+    }
+  }, [data]);
 
+  return (
+    <div className="bg-gray-50 py-8 px-4">
+      <div className="flex items-center mb-2 space-x-2">
+        <FiFileText className="text-blue-600 text-2xl" />
+        <h2 className="text-2xl font-bold text-gray-800">
+          {isLoading ? 'Loading...' : data?.result?.title}
+        </h2>
+      </div>
+      <p className="text-gray-500 mb-6">
+        Date:{' '}
+        {data?.result?.createdAt
+          ? new Date(data.result.createdAt).toISOString().split('T')[0]
+          : ''}
+      </p>
 
-            <button className=" bg-blue-600 px-5 py-3 rounded-lg flex items-center gap-2 text-white cursor-pointer" type="submit"> <FiZap className="h-6 w-6 text-white" /> Edit Summary</button>
-        </div>
-    );
+      <TextArea
+        rows={10}
+        value={summaryContent}
+        onChange={(e) => setSummaryContent(e.target.value)}
+        className="mb-4"
+      />
+
+      <button
+        className="bg-blue-600 px-5 py-3 rounded-lg flex items-center gap-2 text-white cursor-pointer"
+        type="button"
+      >
+        <FiZap className="h-6 w-6 text-white" /> Edit Summary
+      </button>
+    </div>
+  );
 };
 
 export default SingleSummary;

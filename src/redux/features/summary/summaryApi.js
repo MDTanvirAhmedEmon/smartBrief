@@ -19,6 +19,13 @@ const summaryApi = baseApi.injectEndpoints({
             }),
         }),
 
+        getSingleSummary: builder.query({
+            query: (id) => ({
+                url: `/summary/${id}`,
+                method: "GET",
+            }),
+        }),
+
         getAllSummary: builder.query({
             query: (params) => ({
                 url: `/summary`,
@@ -45,4 +52,4 @@ const summaryApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useCreateSummaryMutation, useGetMySummaryQuery, useGetAllSummaryQuery, useDeleteSummaryMutation, useUpdateSummaryMutation } = summaryApi;
+export const { useCreateSummaryMutation, useGetSingleSummaryQuery, useGetMySummaryQuery, useGetAllSummaryQuery, useDeleteSummaryMutation, useUpdateSummaryMutation } = summaryApi;

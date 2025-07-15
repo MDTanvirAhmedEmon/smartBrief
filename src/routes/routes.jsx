@@ -28,7 +28,7 @@ const router = createBrowserRouter([
         element: <AllSummaries></AllSummaries>,
       },
       {
-        path: "/single-summary",
+        path: "/:id",
         element: <SingleSummary></SingleSummary>,
       },
       {
