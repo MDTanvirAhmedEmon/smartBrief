@@ -45,7 +45,7 @@ const History = () => {
           </div>
           :
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data?.result.map(item => (
+            {data?.result?.map(item => (
 
               <Card
                 key={item?._id}

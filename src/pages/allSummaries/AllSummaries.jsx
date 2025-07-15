@@ -1,72 +1,86 @@
-import { useState } from 'react';
-import { Card } from 'antd';
+import { Card, message, Popconfirm } from 'antd';
 import { FiFileText, FiTrash2 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { useDeleteSummaryMutation, useGetAllSummaryQuery } from '../../redux/features/summary/summaryApi';
 
 const History = () => {
-    const [history, setHistory] = useState([
-        {
-            id: 1,
-            title: 'Article Summary - Climate Change',
-            date: '2025-07-12',
-            excerpt: 'Climate change continues to accelerate with rising sea levels and extreme weather...'
-        },
-        {
-            id: 2,
-            title: 'Research Paper - AI in Healthcare',
-            date: '2025-07-10',
-            excerpt: 'AI is transforming patient care through predictive analytics, diagnosis tools...'
-        },
-        {
-            id: 3,
-            title: 'Weekly Report - Marketing Insights',
-            date: '2025-07-08',
-            excerpt: 'This week’s metrics show a 15% increase in engagement across all platforms...'
-        },
-    ]);
+  const { data, isLoading } = useGetAllSummaryQuery();
+  const [deleteSummary] = useDeleteSummaryMutation();
+  const confirm = (id) => {
+    deleteSummary(id).then(() => {
+      message.success("deleted successfully")
+    })
+      .catch((error) => {
+        message.error(error?.data?.message)
+      })
+  };
+  return (
+    <div className="bg-gray-50 py-8">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Summary History</h2>
+      {
+        isLoading ?
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(3)].map((_, index) => (
+              <div
+                key={index}
+                className="rounded-xl shadow animate-pulse p-4 cursor-wait"
+              >
+                {/* Title skeleton */}
+                <div className="flex items-center space-x-2 mb-4">
+                  <div className="h-6 w-6 bg-gray-300 rounded-full"></div>
+                  <div className="h-4 w-2/3 bg-gray-300 rounded"></div>
+                </div>
 
-    const handleDelete = (id) => {
-        const updated = history.filter(item => item.id !== id);
-        setHistory(updated);
-    };
+                {/* Date skeleton */}
+                <div className="h-3 w-1/4 bg-gray-200 rounded mb-4"></div>
 
-    return (
-        <div className="bg-gray-50 py-8 px-4">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">All Summaries</h2>
+                {/* Content skeleton */}
+                <div className="space-y-2">
+                  <div className="h-3 w-full bg-gray-200 rounded"></div>
+                  <div className="h-3 w-full bg-gray-200 rounded"></div>
+                  <div className="h-3 w-5/6 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+          :
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {data?.data?.data?.map(item => (
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {history.map(item => (
-                    <Card
-                        key={item.id}
-                        className="rounded-xl shadow hover:shadow-lg transition duration-300 relative"
-                        title={
-                            <div className="flex items-center space-x-2">
-                                <FiFileText className="text-blue-600" />
-                                <span>{item.title}</span>
-                            </div>
-                        }
-                        extra={<button
-                            onClick={() => handleDelete(item.id)}
-                            className="text-gray-400 hover:text-red-600"
-                            title="Delete"
-                        >
-                            <FiTrash2 size={18} />
-                        </button>}
-                    >
-                        <Link to="/single-summary" className="block mb-6">
-                            <p className="text-gray-700">{item.excerpt}</p>
-                        </Link>
+              <Card
+                key={item?._id}
+                className="rounded-xl shadow hover:shadow-lg transition duration-300"
+                title={<div className="flex items-center space-x-2"><FiFileText className="text-blue-600" /><span>{item.title?.slice(0, 50)}...</span></div>}
+                extra={
+                  <Popconfirm
+                    title="Delete the summary"
+                    description="Are you sure to delete this summary?"
+                    onConfirm={() => confirm(item?._id)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <FiTrash2 className=' cursor-pointer' size={18} />
+                  </Popconfirm>
 
-                        {/* Delete Button in bottom right */}
-                        <div className="flex justify-end">
+                }
+              // extra={<span className="text-sm text-gray-500">{item?.createdAt ? new Date(item.createdAt).toISOString().split('T')[0] : ''}</span>}
+              >
+                <Link to={`/${item?._id}`}>
+                  <p className="text-gray-700 cursor-pointer">{item?.summarizedContent?.slice(0, 100)}...</p>
+                </Link>
+                <div className="flex justify-end">
 
-                            <span className="text-sm text-gray-500">{item.date}</span>
-                        </div>
-                    </Card>
-                ))}
-            </div>
-        </div>
-    );
+                  <span className="text-sm text-gray-500">{item?.createdAt ? new Date(item.createdAt).toISOString().split('T')[0] : ''}</span>
+                </div>
+              </Card>
+
+            ))}
+          </div>
+      }
+
+
+    </div >
+  );
 };
 
 export default History;

@@ -37,12 +37,23 @@ const MainHeader = () => {
         {/* Right - Credits + Profile */}
         <div className="flex items-center space-x-5">
           {/* Credits Badge with Tooltip */}
-          <Tooltip title="Available credits for summarizing content">
-            <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-md">
-              <FiZap className="text-white" />
-              <span>{user?.user?.credits} Credits Left</span>
-            </div>
-          </Tooltip>
+          {
+            user?.user?.role === "admin" ?
+              <Tooltip title="Available credits for summarizing content">
+                <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-md">
+                  <FiZap className="text-white" />
+                  <span>Admin Unlimited Credits</span>
+                </div>
+              </Tooltip>
+              :
+              <Tooltip title="Available credits for summarizing content">
+                <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-md">
+                  <FiZap className="text-white" />
+                  <span>{user?.user?.credits} Credits Left</span>
+                </div>
+              </Tooltip>
+          }
+
 
           {/* Profile Dropdown */}
           <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">

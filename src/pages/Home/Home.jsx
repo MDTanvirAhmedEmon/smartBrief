@@ -120,8 +120,15 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-white border border-blue-200 rounded-xl p-10 shadow-sm min-h-[290px]">
-              {summaryOutput ? (
-                <p className="text-gray-800 text-base leading-relaxed">
+              {isLoading ? (
+                <div className="flex flex-col items-center">
+                  <FiZap className="text-blue-500 text-5xl mb-4 animate-spin" />
+                  <p className="text-blue-500 font-medium">
+                    Generating your summary...
+                  </p>
+                </div>
+              ) : summaryOutput ? (
+                <p className="text-gray-800 text-base leading-relaxed whitespace-pre-line">
                   {summaryOutput}
                 </p>
               ) : (
@@ -132,6 +139,7 @@ export default function Home() {
                   </p>
                 </div>
               )}
+
             </div>
           </div>
         </div>

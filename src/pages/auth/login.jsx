@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 import { Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogInMutation } from "../../redux/features/auth/authApi";
@@ -10,7 +9,7 @@ const LogIn = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const [register, { isLoading }] = useLogInMutation();
+    const [logIn, { isLoading }] = useLogInMutation();
     const onFinish = (values) => {
 
 
@@ -18,12 +17,9 @@ const LogIn = () => {
             email: values?.email,
             password: values?.password,
         };
-        register(data).unwrap()
+        logIn(data).unwrap()
             .then((data) => {
-                console.log(data);
                 const userInfo = decodedToken(data?.data?.accessToken)
-                console.log(userInfo);
- 
                 const token = data?.data?.accessToken
                 dispatch(setUser({ user: userInfo, token: token }))
                 navigate(`/`)
@@ -92,17 +88,15 @@ const LogIn = () => {
                                         Register
                                     </Link>
                                 </div>
+                                <button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="bg-blue-600 w-full mt-8 mb-14 text-white px-5 py-[6px] text-lg rounded-none"
+                                >
+                                    {isLoading ? "Loading..." : "Log In"}
+                                </button>
 
-                                {/* <Link to={`/`} > */}
-                                    <button
-                                        type="primary"
-                                        htmltype="submit"
-                                        disabled={isLoading}
-                                        className="bg-blue-600 w-full mt-8 mb-14 text-white px-5 py-[6px] text-lg rounded-none"
-                                    >
-                                        {isLoading ? "Loading..." : "Log In"}
-                                    </button>
-                                {/* </Link> */}
+
                             </Form>
                         </div>
 
