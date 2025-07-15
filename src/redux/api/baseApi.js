@@ -6,7 +6,7 @@ import { message } from 'antd';
 import { setUser } from '../features/auth/authSlice';
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api/v1',
+    baseUrl: 'https://smartbrief-server.onrender.com/api/v1',
     prepareHeaders: (headers, { getState }) => {
         const token = (getState()).logInUser.token;
         if (token) {
